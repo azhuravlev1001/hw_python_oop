@@ -38,19 +38,15 @@ class Training:
     # константа для перевода значений из часов в минуты
     HOUR_IN_MIN = 60
     # длина шага или гребка в плавании
-    LEN_STEP = {'RUN': 0.65,
-                'SWM': 1.38,
-                'WLK': 0.65}
+    LEN_STEP = 0.65
 
     def __init__(self,
-                 workout_type: str,     # тип тренировки
-                 action: int,
                  # число шагов при ходьбе и беге либо гребков — при плавании
+                 action: int,
                  duration: float,       # длительность тренировки
                  weight: float          # вес спортсмена
                  ) -> None:
 
-        self.workout_type = workout_type
         self.action = action
         self.duration = duration
         self.weight = weight
@@ -58,7 +54,7 @@ class Training:
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
 
-        return (self.action * self.LEN_STEP[self.workout_type] / self.M_IN_KM)
+        return (self.action * self.LEN_STEP / self.M_IN_KM)
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -75,21 +71,16 @@ class Training:
 
         training_type: str    # имя класса тренировки
         duration: float       # длительность тренировки в часах
-        distance: float
         # дистанция в километрах,
         # которую преодолел пользователь за время тренировки
-        speed: float
+        distance: float
         # средняя скорость, с которой двигался пользователь
-        calories: float
+        speed: float
         # количество килокалорий,
         # которое израсходовал пользователь за время тренировки
+        calories: float
 
-        # расшифровка типов тренировки
-        clear_wrkt_type = {'SWM': 'Swimming',
-                           'RUN': 'Running',
-                           'WLK': 'SportsWalking'}
-
-        training_type = clear_wrkt_type[self.workout_type]
+        training_type = self.__class__.__name__
         duration = self.duration
         distance = self.get_distance()
         speed = self.get_mean_speed()
@@ -102,9 +93,9 @@ class Training:
 class Running(Training):
     """Тренировка: бег."""
 
-    def __init__(self, workout_type: str, action: int,
+    def __init__(self, action: int,
                  duration: float, weight: float) -> None:
-        super().__init__(workout_type, action, duration, weight)
+        super().__init__(action, duration, weight)
         super().get_distance()
         super().get_mean_speed()
 
@@ -124,12 +115,12 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
 
-    def __init__(self, workout_type: str, action: int,
+    def __init__(self, action: int,
                  duration: float, weight: float,
                  height: float                           # рост спортсмена
                  ) -> None:
         # наследуем функциональность конструктора из класса-родителя
-        super().__init__(workout_type, action, duration, weight)
+        super().__init__(action, duration, weight)
         super().get_distance()
         super().get_mean_speed()
         # добавляем новую функциональность
@@ -151,8 +142,9 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
+    LEN_STEP = 1.38
 
-    def __init__(self, workout_type: str, action: int,
+    def __init__(self, action: int,
                  duration: float, weight: float,
                  # длина бассейна в метрах
                  length_pool: float,
@@ -161,7 +153,7 @@ class Swimming(Training):
                  ) -> None:
 
         # наследуем функциональность конструктора из класса-родителя
-        super().__init__(workout_type, action, duration, weight)
+        super().__init__(action, duration, weight)
         super().get_distance()
         # добавляем новую функциональность
         self.lenth_pool = length_pool
@@ -194,20 +186,17 @@ def read_package(workout_type: str, data: list) -> Training:
                   }
 
     if workout_type == 'SWM':
-        training = dictionary[workout_type](workout_type,
-                                            data[0],
+        training = dictionary[workout_type](data[0],
                                             data[1],
                                             data[2],
                                             data[3],
                                             data[4])
     elif workout_type == 'RUN':
-        training = dictionary[workout_type](workout_type,
-                                            data[0],
+        training = dictionary[workout_type](data[0],
                                             data[1],
                                             data[2])
     elif workout_type == 'WLK':
-        training = dictionary[workout_type](workout_type,
-                                            data[0],
+        training = dictionary[workout_type](data[0],
                                             data[1],
                                             data[2],
                                             data[3])
