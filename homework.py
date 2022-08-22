@@ -3,7 +3,7 @@ class InfoMessage:
     MES_TEMPL = ('Тип тренировки: {0}; Длительность: {1:.3f} ч.; '
                  'Дистанция: {2:.3f} км; Ср. скорость: {3:.3f} км/ч; '
                  'Потрачено ккал: {4:.3f}.')
-                 
+
     def __init__(self,training_type: str, duration: float,
                  distance: float, speed: float, calories: float) -> None:
 
@@ -14,7 +14,7 @@ class InfoMessage:
         self.calories = calories
 
     def get_message(self) -> str:
-        return self.MES_TEMPL.format(self.training_type, self.duration,
+        return self.MES_TEMPL.format(self.training_type, self.duration, 
                                      self.distance, self.speed, self.calories)
 
 
